@@ -87,6 +87,8 @@
 
                         var id = $(this).attr("id");
 
+                        var x = $(this).attr("lat");
+                        var y = $(this).attr("lng");
                         for (var i = 0; i < layarr.length; i++) {
                             map.remove(layarr[i]);
                             //
@@ -167,7 +169,8 @@
                                 lyr.when(function() {
                                     //view.goTo(lyr.fullExtent);
                                     //view.extent = layer.fullExtent;
-                                    var center = permitsLyr.fullExtent.center;
+                                    //var center = permitsLyr.fullExtent.center;
+                                    var center = {x:x,y:y};
                                     view.goTo({center:center,zoom:10});
                                 });
                             });
@@ -445,7 +448,7 @@
 </div>
 <#assign top=300>
 <#list types as type>
-    <div class="wurenji pointType"  type="uav" style="width:80px;height:70px;position:absolute;top:${top+type_index*100};right:10px;margin:auto auto;border-radius:5px;" id="${type.id}" title="${type.name}">
+    <div class="wurenji pointType"  type="uav" style="width:80px;height:70px;position:absolute;top:${top+type_index*100};right:10px;margin:auto auto;border-radius:5px;" id="${type.id}" title="${type.name}" lat="${type.x}" lng="${type.y}">
         <img class="wurenji1" src="${ctx.contextPath}/ps/previewPath?path=${type.url!}" style="margin-left:18px;margin-top:4px;" width="42px" height="58px"/>
     </div>
 </#list>

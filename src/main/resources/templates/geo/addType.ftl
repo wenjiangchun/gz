@@ -39,6 +39,18 @@
                 </div> <!-- /controls -->
             </div>
             <div class="form-group">
+                <label class="control-label col-sm-2" for="x">中心点经度</label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="x" name="x"  type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="y">中心点纬度</label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="y" name="y"  type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label col-sm-2" for="description"></label>
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-success">保存</button>

@@ -34,6 +34,8 @@
                     <tr>
                         <th sName="name">类型名称</th>
                         <th sName="show" columnRender="formatShow">是否显示</th>
+                        <th sName="x" >中心点经度</th>
+                        <th sName="y" >中心点纬度</th>
                         <th sName="url" columnRender="formatURL">类型图标</th>
                         <th sName="formatOperator" columnRender="formatConfigType">操作</th>
                     </tr>
