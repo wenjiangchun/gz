@@ -131,6 +131,7 @@
         html += "<a href='javascript:void(0)' onclick='deletePosition(" + data.id + ")'>删除</a> |";
         html += "<a href='javascript:void(0)' onclick='editP(" + data.id + ")'>编辑照片</a> |";
         html += "<a href='javascript:void(0)' onclick='editL(" + data.id + ")'>编辑文献</a> |";
+        html += "<a href='javascript:void(0)' onclick='editV(" + data.id + ")'>编辑视频</a> |";
         html += "<a href='javascript:void(0)' onclick='editT(" + data.id + ")'>编辑属性</a> |";
         return html;
     }
@@ -176,6 +177,18 @@
         var index = layer.open({
             type: 2,
             title:'编辑扩展信息',
+            area: ['900px', '400px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: content
+        });
+    }
+
+    function editV(id) {
+        var content = 'editV/' + id;
+        var index = layer.open({
+            type: 2,
+            title: '编辑视频信息',
             area: ['900px', '400px'],
             fixed: false, //不固定
             maxmin: true,

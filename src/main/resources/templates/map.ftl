@@ -129,7 +129,9 @@
                                             region: feature.region,
                                             regionCode: feature.regionCode,
                                             picture:feature.pictures,
-                                            literature:feature.literatures
+                                            literature: feature.literatures,
+                                            video: feature.videos,
+                                            positionExtend: feature.positionExtends
                                         }
                                     };
                                 });
@@ -274,7 +276,7 @@
 
                     var pTemplate = {
                         title: "{address}",
-                        content:"<ul><li>经度: {x}</li><li>维度: {y}</li><li>地址: {address}</li><li>所在区域: {region}</li><li>区域代码: {regionCode}</li><li>照片: {picture:getPictures}</li><li>文献: {literature:downloadLiterature}</li></ul>"
+                        content: "<ul><li>经度: {x}</li><li>维度: {y}</li><li>地址: {address}</li><li>所在区域: {region}</li><li>区域代码: {regionCode}</li><li>照片: {picture:getPictures}</li><li>文献资料: {literature:downloadLiterature}</li><li>视频资料: {video:getVideos}</li><li>扩展信息: {positionExtend:getExtends}</li></ul>"
                     };
 
                     getPictures = function (value, key, data) {
@@ -294,11 +296,20 @@
                         return html;
                     };
 
-                    var preview = function(url) {
-                        window.open("${ctx.contextPath}/ps/previewPath?path=" + url);
+                    getVideos = function (value, key, data) {
+                        var pictures = data.video;
+                        var html = "";
+                        for (var i = 0; i < pictures.length; i++) {
+                            html += "<a href='javascript:void(0)' onclick='play(\"" + pictures[i].name + "\")'>" + pictures[i].name + "</a>";
+                            html += "&nbsp;&nbsp;"
+                        }
+                        return html;
                     };
-                    var downloadL = function(url, name) {
-                        window.open("${ctx.contextPath}/ps/download?parentPath=" + url + "&fileName=" + name);
+
+                    getExtends = function (value, key, data) {
+
+                        var html = "<a href='javascript:void(0)' onclick='showExtends(\"" + data.ObjectID + "\")'>查看</a>";
+                        return html;
                     };
 
                     var quakesRenderer = {
@@ -410,6 +421,30 @@
         var preview = function(url) {
             window.open("${ctx.contextPath}/ps/previewPath?path=" + url);
         };
+
+        var play = function (name) {
+            var content = "${ctx.contextPath}/ps/play?name=" + name
+            var index = parent.layer.open({
+                type: 2,
+                title: '视频播放',
+                area: ['1024px', '650px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: content
+            });
+        };
+        var showExtends = function (id) {
+            alert(id)
+            var content = "${ctx.contextPath}/ps/getExtends?id=" + id;
+            var index = parent.layer.open({
+                type: 2,
+                title: '扩展信息',
+                area: ['700px', '400px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: content
+            });
+        }
     </script>
 </head>
 <body>

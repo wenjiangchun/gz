@@ -28,6 +28,9 @@ public class Position implements Serializable {
 
     private Set<PositionExtend> positionExtends = new HashSet<>();
 
+    private Set<Video> videos = new HashSet<>();
+
+
     private PointType pointType;
 
     @Id
@@ -101,6 +104,16 @@ public class Position implements Serializable {
     @OneToMany(mappedBy = "position", cascade = {CascadeType.ALL},orphanRemoval = true)
     public Set<PositionExtend> getPositionExtends() {
         return positionExtends;
+    }
+
+    @OneToMany(mappedBy = "position", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    public Set<Video> getVideos() {
+        return videos;
+    }
+
+
+    public void setVideos(Set<Video> videos) {
+        this.videos = videos;
     }
 
     public void setPositionExtends(Set<PositionExtend> positionExtends) {

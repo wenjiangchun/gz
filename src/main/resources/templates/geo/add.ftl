@@ -68,6 +68,12 @@
                 </div> <!-- /controls -->
             </div>
             <div class="form-group">
+                <label class="control-label col-sm-2" for="video">视频资料</label>
+                <div class="col-sm-8">
+                    <input id="literature" name="video" value="" type="file" multiple="multiple" accept=".flv">
+                </div> <!-- /controls -->
+            </div>
+            <div class="form-group">
                 <label class="control-label col-sm-2" for="description">描述信息</label>
                 <div class="col-sm-10">
                     <table class="table table-bordered extend">

@@ -31,6 +31,9 @@ public class PositionService extends AbstractBaseService<Position, Integer> {
     private PointTypeDao pointTypeDao;
 
     @Autowired
+    private VideoDao videoDao;
+
+    @Autowired
     public void setPositionDao(PositionDao positionDao) {
         this.positionDao = positionDao;
         super.setDao(positionDao);
@@ -49,6 +52,11 @@ public class PositionService extends AbstractBaseService<Position, Integer> {
     @Transactional
     public void deletePositionExtendById(Integer id) {
         positionExtendDao.delete(id);
+    }
+
+    @Transactional
+    public void deleteVideoById(Integer id) {
+        videoDao.delete(id);
     }
 
     public List<Position> findAll(Integer typeId) {

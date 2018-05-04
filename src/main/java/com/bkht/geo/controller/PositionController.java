@@ -3,6 +3,7 @@ package com.bkht.geo.controller;
 import com.bkht.geo.entity.Literature;
 import com.bkht.geo.entity.Picture;
 import com.bkht.geo.entity.Position;
+import com.bkht.geo.entity.Video;
 import com.bkht.geo.service.PointTypeService;
 import com.bkht.geo.service.PositionService;
 import com.bkht.web.ui.datatable.DataTablePage;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -84,8 +86,10 @@ public class PositionController {
     public String saveCategory(Position position, Model model, MultipartHttpServletRequest request) {
         List<MultipartFile> pictures = request.getFiles("picture");
         List<MultipartFile> literatures = request.getFiles("literature");
+        List<MultipartFile> videos = request.getFiles("video");
         Set<Picture> pictureSet = new HashSet<>();
         Set<Literature> literatureSet = new HashSet<>();
+        Set<Video> videoSet = new HashSet<>();
         pictures.forEach(mf -> {
             try {
                 mf.transferTo(new File(uploadPath + "//" + mf.getOriginalFilename()));
@@ -110,8 +114,21 @@ public class PositionController {
                 e.printStackTrace();
             }
         });
+        videos.forEach(mf -> {
+            try {
+                mf.transferTo(new File(uploadPath + "//" + mf.getOriginalFilename()));
+                Video literature = new Video();
+                literature.setPosition(position);
+                literature.setName(mf.getOriginalFilename());
+                literature.setUrl(uploadPath + "//" + mf.getOriginalFilename());
+                videoSet.add(literature);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         position.setLiteratures(literatureSet);
         position.setPictures(pictureSet);
+        position.setVideos(videoSet);
         position.setPositionExtends(new HashSet<>(position.getExtendList()));
         try {
             positionService.save(position);
@@ -163,6 +180,7 @@ public class PositionController {
         model.addAttribute("ps", this.positionService.findById(id).getPictures());
         return "geo/editP";
     }
+
 
     @RequestMapping("/updateP")
     @ResponseBody
@@ -285,6 +303,51 @@ public class PositionController {
     }
 
 
+    @RequestMapping("/editV/{id}")
+    public String editV(@PathVariable Integer id, Model model) {
+        model.addAttribute("position", this.positionService.findById(id));
+        model.addAttribute("vs", this.positionService.findById(id).getVideos());
+        return "geo/editV";
+    }
+
+
+    @RequestMapping("/updateV")
+    @ResponseBody
+    public String updateV(Position position, Model model, MultipartHttpServletRequest request, Integer[] pid) {
+        try {
+            Position p = this.positionService.findById(position.getId());
+            List<MultipartFile> pictures = request.getFiles("video");
+            Set<Video> pictureSet = new HashSet<>();
+            pictures.forEach(mf -> {
+                try {
+                    mf.transferTo(new File(uploadPath + "/" + mf.getOriginalFilename()));
+                    Video picture = new Video();
+                    picture.setPosition(p);
+                    picture.setName(mf.getOriginalFilename());
+                    picture.setUrl(uploadPath + "/" + mf.getOriginalFilename());
+                    pictureSet.add(picture);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            List<Integer> pids = pid != null ? Arrays.asList(pid) : new ArrayList<>();
+            p.getVideos().forEach(pc -> {
+                if (pids.contains(pc.getId())) {
+                    pictureSet.add(pc);
+                }
+            });
+            p.getVideos().clear();
+            p.getVideos().addAll(pictureSet);
+            positionService.save(p);
+            return "SUCCESS";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
+
+
     @RequestMapping("/deleteP/{id}")
     @ResponseBody
     public String deleteP(@PathVariable Integer id, Model model) {
@@ -318,6 +381,18 @@ public class PositionController {
             return e.getMessage();
         }
     }
+
+    @RequestMapping("/deleteV/{id}")
+    @ResponseBody
+    public String deleteV(@PathVariable Integer id, Model model) {
+        try {
+            positionService.deleteVideoById(id);
+            return "SUCCESS";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
 
 
     @RequestMapping(value = "/previewPath")
@@ -375,5 +450,19 @@ public class PositionController {
     @ResponseBody
     public List<Position> getAll(Integer typeId) {
         return this.positionService.findAll(typeId);
+    }
+
+    @RequestMapping("play")
+    public String play(@RequestParam String name, Model model) {
+        model.addAttribute("name", name);
+        model.addAttribute("parentPath", uploadPath);
+        return "play";
+    }
+
+    @RequestMapping("getExtends")
+    public String getExtends(@RequestParam Integer id, Model model) {
+        model.addAttribute("position", this.positionService.findById(id));
+        model.addAttribute("ps", this.positionService.findById(id).getPositionExtends());
+        return "geo/showT";
     }
 }
